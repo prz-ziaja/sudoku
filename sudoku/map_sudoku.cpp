@@ -18,7 +18,7 @@ map_sudoku::map_sudoku(string filename)
             throw(string("Zly format pliku\n")+filename);
         }
         vector<set<unsigned int>> &vline=*(new vector<set< unsigned int> >(9));// wczytywanie danych z pliku
-        for(unsigned int j=0;j<9;++j){//numeracja po tablicy tzn vec(vec)
+        for(size_t j=0;j<9;++j){//numeracja po tablicy tzn vec(vec)
             if(j*2>(line.length()-1)||line[2*j]=='0'||line.length()==0){//przypadek niedokonczona linia lub pusta pozycja
                 //vline.push_back(*(new set<unsigned int>));
                 for(unsigned int jj=1;jj<10;++jj){
@@ -27,7 +27,7 @@ map_sudoku::map_sudoku(string filename)
             else//przypadek zapelniona pozycja
             {
                 //vline.push_back(*(new set<unsigned int>));
-                vline[j].insert(line[j*2]-48);
+                vline[j].insert(static_cast<unsigned int>(line[j*2]-48));
             }
         }
         map.push_back(vline);
@@ -52,6 +52,7 @@ void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
             for(size_t x=0;x<9;++x){
                 if(map[y][x].size()==1){
                     for(size_t i=0;i<9;++i)//usuwanie wartosci w kolumnach i wierszach
+
                         if(i!=x)
                             map[y][i].erase(*(map[y][x].begin()));
                     for(size_t i=0;i<9;++i)
@@ -75,8 +76,9 @@ void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
                         for(size_t i=0;i<9;++i){
                             if(i!=y){
                                 for(auto j:map[i][x]){
-                                    if(p==j)
-                                        flag=false;
+                                    if (p==j)
+                                            flag = false;
+
                                 }
                             }
                         }
