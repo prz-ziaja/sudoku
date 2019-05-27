@@ -13,7 +13,7 @@ int main()
     string namefile;
     cout<<"Podaj nazwe plikow do wyszukiwania w podfolderach:"<<endl;
 
-    getline(cin,namefile);      //z lini wczytuje po jakiej nazwie szukac plikow z nierozwiazanymi sudoku
+    getline(cin,namefile);      //z linii wczytuje po jakiej nazwie szukac plikow z nierozwiazanymi sudoku
     if(namefile.size()==0)
         namefile="nierozwiazane-sudoku";
     vector<string> &filelist=getsudoku(namefile);//wektor sciezek do plikow z sudoku

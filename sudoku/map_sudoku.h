@@ -5,16 +5,17 @@
 #include <fstream>
 #include <vector>
 #include <set>
+using myMap = std::vector < std::vector< std::set<unsigned int> > >;
 class map_sudoku
 {
 public:
     map_sudoku(std::string);
     bool send();
-    bool solve();
+    void solve();
     void print();
     bool issolved();
 private:
-    std::vector < std::vector< std::set<unsigned int> > > map;
+    myMap map;
 };
 
 #endif // MAP_SUDOKU_H
