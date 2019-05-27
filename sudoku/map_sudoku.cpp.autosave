@@ -27,7 +27,7 @@ map_sudoku::map_sudoku(string filename)
             else//przypadek zapelniona pozycja
             {
                 //vline.push_back(*(new set<unsigned int>));
-                vline[j].insert(line[j*2]-48);
+                vline[j].insert(static_cast<unsigned int>(line[j*2]-48));
             }
         }
         map.push_back(vline);
