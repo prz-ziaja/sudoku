@@ -43,7 +43,7 @@ vector <string >  &getsudoku(string namefile)
     for(auto& p:fs::directory_iterator(fs::current_path())){
         if(fs::is_directory(p)){
             dirtofile=(p.path()).u8string()+slash +namefile;
-                         //   cout<<dirtofile<<endl;
+                            cout<<dirtofile<<endl;
             if(fs::exists(dirtofile)){
                 pliki.push_back(dirtofile);
 

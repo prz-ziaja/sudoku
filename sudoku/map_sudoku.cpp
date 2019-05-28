@@ -103,10 +103,10 @@ void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
                             map[y][x].insert(zmiana);
                             break;
                         }
-                        /*flag =true;
+                        flag =true; //sprawdzam czy w kwadracie są pozycje na ktorych na pewno musi byc dana liczba bo w zadnym innym miejscu nie pasuje
                         for(int i=((int)y/3)*3;i<((int)(y/3)+1)*3;++i){
                             for(int j=((int)x/3)*3;j<((int)(x/3)+1)*3;++j)
-                                if(i!=y&&j!=x){
+                                if(i!=y||j!=x){
                                     for(auto l:map[i][j]){
                                         if(p==l)
                                             flag=false;
@@ -118,7 +118,7 @@ void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
                             map[y][x].erase(map[y][x].begin(),map[y][x].end());
                             map[y][x].insert(zmiana);
                             break;
-                        }*/
+                        }
                     }
                 }
             }
