@@ -145,15 +145,27 @@ void board_sudoku::solve(){//coordinates same as in the matrix
 
 }
 void board_sudoku::print(){
+    int row_flag=0;
+    int column_flag=0;
     for(auto x:m_board){
+        row_flag++;
         for(auto y:x){
-            for(auto z:y)
+            column_flag++;
+            for(auto z:y){
                 if (y.size()==1)
-                    cout<<z<<' ';
-                else {cout <<'  '; break;}
-        cout<<'|';
+                    cout<<' '<<z<<' ';
+                else {cout <<"   "; break;}
+            }
+            if(column_flag!=9) cout<<'|';
         }
-
         cout<<endl;
+        if (row_flag!=9){
+            for (int i =0; i<9;i++){
+                cout<<"----";
+            }
+            cout<<endl;
+        }
+        column_flag=0;
     }
+    cout<<endl;
 }
