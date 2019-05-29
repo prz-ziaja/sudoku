@@ -11,10 +11,10 @@ map_sudoku::map_sudoku(string filename)
     for(size_t i=0;i<9;++i){
         getline(fileptr,line);//wczytywanie mapy z sudoku
         if(regex_search(line,pat)==false){//destrukcja obiekty przy bledzie
-            for(auto k:map){
+            for(auto k:m_map){
                 k.clear();
             }
-            map.clear();
+            m_map.clear();
             throw(string("Zly format pliku\n")+filename);
         }
         vector<set<unsigned int>> &vline=*(new vector<set< unsigned int> >(9));// wczytywanie danych z pliku
@@ -30,14 +30,14 @@ map_sudoku::map_sudoku(string filename)
                 vline[j].insert(static_cast<unsigned int>(line[j*2]-48));
             }
         }
-        map.push_back(vline);
+        m_map.push_back(vline);
     }
 }
 bool map_sudoku::issolved(){
     bool k=true;
     for(size_t y=0;y<9;++y){
         for(size_t x=0;x<9;++x){
-            if(map[y][x].size()!=1){
+            if(m_map[y][x].size()!=1){
                 k=false;
                 goto fastexit;
             }
@@ -46,36 +46,45 @@ bool map_sudoku::issolved(){
     fastexit:
         return k;
 }
+void map_sudoku::clearRows(size_t x, size_t y){
+    for(size_t i=0;i<9;++i)
+        if(i!=y)
+            m_map[i][x].erase(*(m_map[y][x].begin()));
+
+}
+void map_sudoku::clearColumns(size_t x, size_t y){
+        for(size_t i=0;i<9;++i){
+            if(i!=x)
+                m_map[y][i].erase(*(m_map[y][x].begin()));
+        }
+
+        //usuwanie w kwadracie
+
+}
 void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
     while(!issolved()){
         for(size_t y=0;y<9;++y){
             for(size_t x=0;x<9;++x){
-                if(map[y][x].size()==1){
-                    for(size_t i=0;i<9;++i)//usuwanie wartosci w kolumnach i wierszach
-
-                        if(i!=x)
-                            map[y][i].erase(*(map[y][x].begin()));
-                    for(size_t i=0;i<9;++i)
-                        if(i!=y)
-                            map[i][x].erase(*(map[y][x].begin()));
-                    //usuwanie w kwadracie
-                    {
-                        for(size_t i=(static_cast<size_t>(y/3))*3;i<(static_cast<size_t>(y/3)+1)*3;++i){
-                            for(size_t j=(static_cast<size_t>(x/3))*3;j<(static_cast<size_t>(x/3)+1)*3;++j)
-                                if(i!=y&&j!=x){
-                                    map[i][j].erase(*(map[y][x].begin()));
-                                }
-                        }
+                if(m_map[y][x].size()==1){
+                clearColumns(x,y);
+                clearRows(x,y);
+                [this,x,y]() mutable{
+                    for(size_t i=(static_cast<size_t>(y/3))*3;i<(static_cast<size_t>(y/3)+1)*3;++i){
+                        for(size_t j=(static_cast<size_t>(x/3))*3;j<(static_cast<size_t>(x/3)+1)*3;++j)
+                            if(i!=y&&j!=x){
+                                this->m_map[i][j].erase(*(this->m_map[y][x].begin()));
+                            }
                     }
+                }();
                 }
-                else if(map[y][x].size()==0)
+                else if(m_map[y][x].size()==0)
                     throw(string("Blad mapy sudoku, upewnij sie ze sudoku jest rozwiazywalne\nPole na mapie nie to ze jest puste co w ogole nie ma tam wartosci\n"));
                 else{
                     bool flag=true;
-                    for(auto p:map[y][x]){
+                    for(auto p:m_map[y][x]){
                         for(size_t i=0;i<9;++i){
                             if(i!=y){
-                                for(auto j:map[i][x]){
+                                for(auto j:m_map[i][x]){
                                     if (p==j)
                                             flag = false;
 
@@ -84,14 +93,14 @@ void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
                         }
                         if(flag){
                             unsigned int zmiana=p;
-                            map[y][x].erase(map[y][x].begin(),map[y][x].end());
-                            map[y][x].insert(zmiana);
+                            m_map[y][x].erase(m_map[y][x].begin(),m_map[y][x].end());
+                            m_map[y][x].insert(zmiana);
                             break;
                         }
                         flag =true;
                         for(size_t i=0;i<9;++i){
                             if(i!=x){
-                                for(auto j:map[y][i]){
+                                for(auto j:m_map[y][i]){
                                     if(p==j)
                                         flag=false;
                                 }
@@ -99,15 +108,15 @@ void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
                         }
                         if(flag){
                             unsigned int zmiana=p;
-                            map[y][x].erase(map[y][x].begin(),map[y][x].end());
-                            map[y][x].insert(zmiana);
+                            m_map[y][x].erase(m_map[y][x].begin(),m_map[y][x].end());
+                            m_map[y][x].insert(zmiana);
                             break;
                         }
                         flag =true; //sprawdzam czy w kwadracie są pozycje na ktorych na pewno musi byc dana liczba bo w zadnym innym miejscu nie pasuje
-                        for(int i=((int)y/3)*3;i<((int)(y/3)+1)*3;++i){
-                            for(int j=((int)x/3)*3;j<((int)(x/3)+1)*3;++j)
+                        for(size_t i=static_cast<size_t>(y/3)*3;i<(static_cast<size_t>(y/3)+1)*3;++i){
+                            for(size_t j=(static_cast<size_t>(x/3))*3;j<(static_cast<size_t>(x/3)+1)*3;++j)
                                 if(i!=y||j!=x){
-                                    for(auto l:map[i][j]){
+                                    for(auto l:m_map[i][j]){
                                         if(p==l)
                                             flag=false;
                                     }
@@ -115,8 +124,8 @@ void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
                         }
                         if(flag){
                             unsigned int zmiana=p;
-                            map[y][x].erase(map[y][x].begin(),map[y][x].end());
-                            map[y][x].insert(zmiana);
+                            m_map[y][x].erase(m_map[y][x].begin(),m_map[y][x].end());
+                            m_map[y][x].insert(zmiana);
                             break;
                         }
                     }
@@ -127,7 +136,7 @@ void map_sudoku::solve(){//wspolrzedne tak samo jak w macierzy
 
 }
 void map_sudoku::print(){
-    for(auto x:map){
+    for(auto x:m_map){
         for(auto y:x){
             for(auto z:y)
                 cout<<z<<' ';

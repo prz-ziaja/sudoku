@@ -14,8 +14,11 @@ public:
     void solve();
     void print();
     bool issolved();
+    void clearRows(size_t x, size_t y);
+    void clearColumns(size_t x, size_t y);
+
 private:
-    myMap map;
+    myMap m_map;
 };
 
 #endif // MAP_SUDOKU_H
