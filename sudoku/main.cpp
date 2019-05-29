@@ -23,11 +23,10 @@ int main()
         a.print();
         a.solve();
         a.print();
-        int cos;
-        cin>>cos;
+
         delete &a;}
         catch(string blad)
-        {cout<<blad<<endl;}
+        {cout<<blad<<endl; continue;}
         //a.send();
     }
 }

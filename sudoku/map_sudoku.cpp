@@ -18,7 +18,6 @@ board_sudoku::board_sudoku(string filename)
     regex pat("^([0-9],)*$"); //file's format
     for(size_t i=0;i<9;++i){
         getline(fileptr,line);//gets map from sudoku
-        [this,line,pat,filename]() mutable{
             if(regex_search(line,pat)==false){//object destructuion if error occures
                 for(auto k:m_board){
                  k.clear();
@@ -26,7 +25,7 @@ board_sudoku::board_sudoku(string filename)
               m_board.clear();
               throw(string("Zly format pliku\n")+filename);
             }
-        }();
+
         vector<set<size_t>> &vline=*(new vector<set< size_t> >(9));// getting data from file
         for(size_t i=0;i<9;++i){//iterating over vec of vec
             if(i*2>(line.length()-1)||line[2*i]=='0'||line.length()==0){//case of non ended line or empty position
@@ -95,8 +94,10 @@ void board_sudoku::solve(){//coordinates same as in the matrix
 //                    }
 //                }();
                 }
-                else if(m_board[y][x].size()==0)
-                    throw(string("Blad mapy sudoku, upewnij sie ze sudoku jest rozwiazywalne\nPole na mapie nie to ze jest puste co w ogole nie ma tam wartosci\n"));
+                else if(m_board[y][x].size()==0){
+                    delete this;
+                    throw(string("Sudoku does not have solution\n"));
+                }
                 else{
                     bool flag=true;
                     for(auto p:m_board[y][x]){
@@ -150,8 +151,10 @@ void board_sudoku::solve(){//coordinates same as in the matrix
                 }
             }
         }
-        if(noelem==counter())
+        if(noelem==counter()){
+            delete this;
             throw(string("Sudoku is not a sudoku, more than one solution\n"));
+        }
     }
 
 }

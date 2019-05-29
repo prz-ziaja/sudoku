@@ -10,6 +10,7 @@ class board_sudoku
 {
 public:
     board_sudoku(std::string);
+    int counter(); //checks if sudoku has only one solution
     void solve();//sudoku solving method
     void print();//prints actual sudoku
     bool issolved();//checks if sudoku is arleady solved
