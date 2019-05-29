@@ -1,7 +1,15 @@
 #include "map_sudoku.h"
 #include <regex>
-
 using namespace std;
+int board_sudoku::counter(){
+    int i=0;
+    for(size_t y=0;y<9;++y){
+        for(size_t x=0;x<9;++x){
+            i+=m_board[y][x].size();
+        }
+    }
+    return i;
+}
 board_sudoku::board_sudoku(string filename)
 {
     fstream fileptr;
@@ -71,6 +79,7 @@ void board_sudoku::clearBox(size_t x, size_t y){
 }
 void board_sudoku::solve(){//coordinates same as in the matrix
     while(!issolved()){
+        int noelem=counter();//number of elements in m_board
         for(size_t y=0;y<9;++y){
             for(size_t x=0;x<9;++x){
                 if(m_board[y][x].size()==1){
@@ -141,6 +150,8 @@ void board_sudoku::solve(){//coordinates same as in the matrix
                 }
             }
         }
+        if(noelem==counter())
+            throw(string("Sudoku is not a sudoku, more than one solution\n"));
     }
 
 }
