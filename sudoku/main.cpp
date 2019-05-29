@@ -11,7 +11,7 @@ vector < string> &getsudoku(string namefile);
 int main()
 {
     string namefile;
-    cout<<"Podaj nazwe plikow do wyszukiwania w podfolderach:"<<endl;
+    //cout<<"Podaj nazwe plikow do wyszukiwania w podfolderach:"<<endl;
 
     getline(cin,namefile);      //z linii wczytuje po jakiej nazwie szukac plikow z nierozwiazanymi sudoku
     if(namefile.size()==0)
@@ -19,7 +19,7 @@ int main()
     vector<string> &filelist=getsudoku(namefile);//wektor sciezek do plikow z sudoku
     for(auto i:filelist){
         //cout<<i<<endl;
-        try{map_sudoku &a=*(new map_sudoku(i));
+        try{board_sudoku &a=*(new board_sudoku(i));
         a.print();
         a.solve();
         a.print();
@@ -43,7 +43,7 @@ vector <string >  &getsudoku(string namefile)
     for(auto& p:fs::directory_iterator(fs::current_path())){
         if(fs::is_directory(p)){
             dirtofile=(p.path()).u8string()+slash +namefile;
-                            cout<<dirtofile<<endl;
+                            //cout<<dirtofile<<endl;
             if(fs::exists(dirtofile)){
                 pliki.push_back(dirtofile);
 

@@ -5,11 +5,11 @@
 #include <fstream>
 #include <vector>
 #include <set>
-using myMap = std::vector < std::vector< std::set<unsigned int> > >;
-class map_sudoku
+using myMap = std::vector < std::vector< std::set<size_t> > >;
+class board_sudoku
 {
 public:
-    map_sudoku(std::string);
+    board_sudoku(std::string);
     void solve();//sudoku solving method
     void print();//prints actual sudoku
     bool issolved();//checks if sudoku is arleady solved
@@ -18,7 +18,7 @@ public:
     void clearBox(size_t x, size_t y); //clears box's values (9* 3x3 box) in map that can't occur in sudoku
 
 private:
-    myMap m_map; //we are working on map, so
+    myMap m_board; //we are working on map, so
 };
 
 #endif // MAP_SUDOKU_H
