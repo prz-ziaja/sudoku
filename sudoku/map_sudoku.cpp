@@ -82,12 +82,12 @@ void board_sudoku::onlyOneColumn(bool& flag, bool& goOutOfLoop, size_t column, s
             for(auto j:m_board[row][i]){
                 if(p==j){
                     flag=false;
-                    goto fastecolumnitcolumn;
+                    goto fastexitcolumn;
                 }
             }
         }
     }
-    fastecolumnitcolumn:
+    fastexitcolumn:
     if (flag){
     insertElement(flag,row,column,p);
     goOutOfLoop=true;
@@ -131,12 +131,12 @@ void board_sudoku::onlyOneBox(bool& flag, bool& goOutOfLoop, size_t column, size
                 for(auto l:m_board[i][j]){
                     if(p==l){
                         flag=false;
-                        goto fastecolumnitbocolumn;
+                        goto fastexitbox;
                     }
                 }
             }
     }
-    fastecolumnitbocolumn:
+    fastexitbox:
     if (flag){
     insertElement(flag,row,column,p);
     goOutOfLoop=true;
