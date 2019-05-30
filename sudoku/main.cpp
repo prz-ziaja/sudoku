@@ -8,6 +8,7 @@
 using namespace std;
 namespace fs=std::experimental::filesystem;
 vector < string> &getsudoku(string namefile);
+
 int main()
 {
     string namefile;
@@ -31,6 +32,7 @@ int main()
         //a.send();
     }
 }
+
 vector <string >  &getsudoku(string namefile)
 {
     #ifdef _WIN32
