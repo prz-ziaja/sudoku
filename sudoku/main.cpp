@@ -21,9 +21,10 @@ int main()
         //cout<<i<<endl;
         try{board_sudoku &a=*(new board_sudoku(i));
         a.print();
+        cout<<endl;
         a.solve();
         a.print();
-
+        cout<<endl;
         delete &a;}
         catch(string blad)
         {cout<<blad<<endl; continue;}

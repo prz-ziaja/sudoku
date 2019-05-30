@@ -1,15 +1,7 @@
 #include "map_sudoku.h"
 #include <regex>
 using namespace std;
-int board_sudoku::counter(){
-    int i=0;
-    for(size_t y=0;y<9;++y){
-        for(size_t x=0;x<9;++x){
-            i+=m_board[y][x].size();
-        }
-    }
-    return i;
-}
+
 board_sudoku::board_sudoku(string filename)
 {
     fstream fileptr;
@@ -44,6 +36,17 @@ board_sudoku::board_sudoku(string filename)
     }
     fileptr.close();
 }
+
+int board_sudoku::counter(){
+    int i=0;
+    for(size_t y=0;y<9;++y){
+        for(size_t x=0;x<9;++x){
+            i+=m_board[y][x].size();
+        }
+    }
+    return i;
+}
+
 bool board_sudoku::issolved(){
     bool k=true;
     for(size_t y=0;y<9;++y){
@@ -57,18 +60,59 @@ bool board_sudoku::issolved(){
     fastexit:
         return k;
 }
+
 void board_sudoku::clearRows(size_t x, size_t y){
     for(size_t i=0;i<9;++i)
         if(i!=y)
             m_board[i][x].erase(*(m_board[y][x].begin()));
 
 }
+
 void board_sudoku::clearColumns(size_t x, size_t y){
         for(size_t i=0;i<9;++i){
             if(i!=x)
                 m_board[y][i].erase(*(m_board[y][x].begin()));
         }
 }
+
+void board_sudoku::onlyOneColumn(bool& flag, bool& goOutOfLoop, size_t x, size_t y, size_t p){
+    flag =true;
+    for(size_t i=0;i<9;++i){
+        if(i!=x){
+            for(auto j:m_board[y][i]){
+                if(p==j){
+                    flag=false;
+                    goto fastexitcolumn;
+                }
+            }
+        }
+    }
+    fastexitcolumn:
+    if (flag){
+    insertElement(flag,y,x,p);
+    goOutOfLoop=true;
+    }
+}
+
+void board_sudoku::onlyOneRow(bool& flag, bool& goOutOfLoop, size_t x, size_t y, size_t p){
+    flag =true;
+    for(size_t i=0;i<9;++i){
+        if(i!=y){
+            for(auto j:m_board[i][y]){
+                if(p==j){
+                    flag=false;
+                    goto fastexitrow;
+                }
+            }
+        }
+    }
+    fastexitrow:
+    if (flag){
+    insertElement(flag,y,x,p);
+    goOutOfLoop=true;
+    }
+}
+
 void board_sudoku::clearBox(size_t x, size_t y){
     for(size_t i=(static_cast<size_t>(y/3))*3;i<(static_cast<size_t>(y/3)+1)*3;++i){
        for(size_t j=(static_cast<size_t>(x/3))*3;j<(static_cast<size_t>(x/3)+1)*3;++j){
@@ -78,6 +122,34 @@ void board_sudoku::clearBox(size_t x, size_t y){
        }
    }
 }
+
+void board_sudoku::onlyOneBox(bool& flag, bool& goOutOfLoop, size_t x, size_t y, size_t p){
+    flag =true;
+    for(size_t i=static_cast<size_t>(y/3)*3;i<(static_cast<size_t>(y/3)+1)*3;++i){
+        for(size_t j=(static_cast<size_t>(x/3))*3;j<(static_cast<size_t>(x/3)+1)*3;++j)
+            if(i!=y||j!=x){
+                for(auto l:m_board[i][j]){
+                    if(p==l){
+                        flag=false;
+                        goto fastexitbox;
+                    }
+                }
+            }
+    }
+    fastexitbox:
+    if (flag){
+    insertElement(flag,y,x,p);
+    goOutOfLoop=true;
+    }
+}
+
+void board_sudoku::insertElement(bool& goOutOfLoop, size_t y, size_t x, size_t p){
+        size_t change=p;
+        m_board[y][x].erase(m_board[y][x].begin(),m_board[y][x].end());
+        m_board[y][x].insert(change);
+        goOutOfLoop = true;
+}
+
 void board_sudoku::solve(){//coordinates same as in the matrix
     while(!issolved()){
         int noelem=counter();//number of elements in m_board
@@ -86,7 +158,7 @@ void board_sudoku::solve(){//coordinates same as in the matrix
                 if(m_board[y][x].size()==1){
                 clearColumns(x,y);
                 clearRows(x,y);
-//                clearBox(x,y);
+//               clearBox(x,y);
                 [this,x,y]() mutable{
                     for(size_t i=(static_cast<size_t>(y/3))*3;i<(static_cast<size_t>(y/3)+1)*3;++i){
                         for(size_t j=(static_cast<size_t>(x/3))*3;j<(static_cast<size_t>(x/3)+1)*3;++j)
@@ -102,53 +174,20 @@ void board_sudoku::solve(){//coordinates same as in the matrix
                 }
                 else{
                     bool flag=true;
+                    bool goOutOfLoop=false;
                     for(auto p:m_board[y][x]){
-                        for(size_t i=0;i<9;++i){
-                            if(i!=y){
-                                for(auto j:m_board[i][x]){
-                                    if (p==j)
-                                            flag = false;
 
-                                }
-                            }
-                        }
-                        if(flag){
-                            size_t zmiana=p;
-                            m_board[y][x].erase(m_board[y][x].begin(),m_board[y][x].end());
-                            m_board[y][x].insert(zmiana);
+                        onlyOneRow(flag,goOutOfLoop,x,y,p);
+                        if (goOutOfLoop)
                             break;
-                        }
-                        flag =true;
-                        for(size_t i=0;i<9;++i){
-                            if(i!=x){
-                                for(auto j:m_board[y][i]){
-                                    if(p==j)
-                                        flag=false;
-                                }
-                            }
-                        }
-                        if(flag){
-                            size_t zmiana=p;
-                            m_board[y][x].erase(m_board[y][x].begin(),m_board[y][x].end());
-                            m_board[y][x].insert(zmiana);
+
+                        onlyOneColumn(flag,goOutOfLoop,x,y,p);
+                        if (goOutOfLoop)
                             break;
-                        }
-                        flag =true; //sprawdzam czy w kwadracie są pozycje na ktorych na pewno musi byc dana liczba bo w zadnym innym miejscu nie pasuje
-                        for(size_t i=static_cast<size_t>(y/3)*3;i<(static_cast<size_t>(y/3)+1)*3;++i){
-                            for(size_t j=(static_cast<size_t>(x/3))*3;j<(static_cast<size_t>(x/3)+1)*3;++j)
-                                if(i!=y||j!=x){
-                                    for(auto l:m_board[i][j]){
-                                        if(p==l)
-                                            flag=false;
-                                    }
-                                }
-                        }
-                        if(flag){
-                            size_t zmiana=p;
-                            m_board[y][x].erase(m_board[y][x].begin(),m_board[y][x].end());
-                            m_board[y][x].insert(zmiana);
+
+                        onlyOneBox(flag,goOutOfLoop,x,y,p);
+                        if (goOutOfLoop)
                             break;
-                        }
                     }
                 }
             }
@@ -160,6 +199,7 @@ void board_sudoku::solve(){//coordinates same as in the matrix
     }
 
 }
+
 void board_sudoku::print(){
     int row_flag=0;
     int column_flag=0;
