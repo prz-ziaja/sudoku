@@ -21,7 +21,7 @@ board_sudoku::board_sudoku(string filename)
 
         vector<set<size_t>> &vline=*(new vector<set< size_t> >(9));// getting data from file
         for(size_t i=0;i<9;++i){//iterating over vec of vec
-            if(i*2>(line.length()-1)||line[2*i]=='0'||line.length()==0){//case of non ended line or emptrow position
+            if(i*2>(line.length()-1)||line[2*i]=='0'||line.length()==0){//case of non ended line or empty position
                 //vline.push_back(*(new set<unsigned int>));
                 for(unsigned int j=1;j<10;++j){
                     vline[i].insert(j);}
@@ -150,7 +150,7 @@ void board_sudoku::insertElement(bool& goOutOfLoop, size_t row, size_t column, s
         goOutOfLoop = true;
 }
 
-void board_sudoku::solve(){//coordinates same as in the matricolumn
+void board_sudoku::solve(){//coordinates same as in the matrix
     while(!issolved()){
         int noelem=counter();//number of elements in m_board
         for(size_t row=0;row<9;++row){
