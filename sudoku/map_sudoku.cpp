@@ -43,6 +43,7 @@ int board_sudoku::counter(){
         for(size_t column=0;column<9;++column){
             i+=m_board[row][column].size();
         }
+
     }
     return i;
 }
@@ -53,11 +54,11 @@ bool board_sudoku::issolved(){
         for(size_t column=0;column<9;++column){
             if(m_board[row][column].size()!=1){
                 k=false;
-                goto fastecolumnit;
+                goto fastexit;
             }
         }
     }
-    fastecolumnit:
+    fastexit:
         return k;
 }
 
@@ -159,7 +160,7 @@ void board_sudoku::solve(){//coordinates same as in the matrix
                 clearColumns(column,row);
                 clearRows(column,row);
 //              clearBox(column,row);
-                [this,column,row]() mutable{
+                [this,column,row](){
                     for(size_t i=(static_cast<size_t>(row/3))*3;i<(static_cast<size_t>(row/3)+1)*3;++i){
                         for(size_t j=(static_cast<size_t>(column/3))*3;j<(static_cast<size_t>(column/3)+1)*3;++j)
                             if(i!=row&&j!=column){
