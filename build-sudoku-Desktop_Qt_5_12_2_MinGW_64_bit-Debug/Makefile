@@ -208,6 +208,7 @@ Makefile: ../sudoku/sudoku.pro ../../../qt/5.12.2/mingw73_64/mkspecs/win32-g++/q
 		../../../qt/5.12.2/mingw73_64/mkspecs/features/qt_config.prf \
 		../../../qt/5.12.2/mingw73_64/mkspecs/win32-g++/qmake.conf \
 		../../../qt/5.12.2/mingw73_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../qt/5.12.2/mingw73_64/mkspecs/features/exclusive_builds.prf \
 		../../../qt/5.12.2/mingw73_64/mkspecs/features/toolchain.prf \
 		../../../qt/5.12.2/mingw73_64/mkspecs/features/default_pre.prf \
@@ -372,6 +373,7 @@ Makefile: ../sudoku/sudoku.pro ../../../qt/5.12.2/mingw73_64/mkspecs/win32-g++/q
 ../../../qt/5.12.2/mingw73_64/mkspecs/features/qt_config.prf:
 ../../../qt/5.12.2/mingw73_64/mkspecs/win32-g++/qmake.conf:
 ../../../qt/5.12.2/mingw73_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../qt/5.12.2/mingw73_64/mkspecs/features/exclusive_builds.prf:
 ../../../qt/5.12.2/mingw73_64/mkspecs/features/toolchain.prf:
 ../../../qt/5.12.2/mingw73_64/mkspecs/features/default_pre.prf:

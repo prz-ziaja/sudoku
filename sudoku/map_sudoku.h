@@ -1,5 +1,4 @@
-#ifndef MAP_SUDOKU_H
-#define MAP_SUDOKU_H
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -31,4 +30,3 @@ private:
     Board m_board;
 };
 
-#endif // MAP_SUDOKU_H

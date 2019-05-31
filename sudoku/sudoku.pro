@@ -6,8 +6,10 @@ LIBS += -lstdc++fs
 
 SOURCES += \
         main.cpp \
-    map_sudoku.cpp
+    map_sudoku.cpp \
+    getsudoku_filesystem.cpp
 
 
 HEADERS += \
-    map_sudoku.h
+    map_sudoku.h \
+    getsudoku_filesystem.h
