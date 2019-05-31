@@ -16,7 +16,7 @@ board_sudoku::board_sudoku(string filename) {
                 k.clear();
             }
             fileptr.close();
-            Ł
+
             m_board.clear();
             throw (string("Zlrow format pliku\n") + filename);
         }
