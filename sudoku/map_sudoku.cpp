@@ -78,41 +78,45 @@ void board_sudoku::clearColumns(size_t column, size_t row) {
 
 void board_sudoku::onlyOneColumn(bool &flag, bool &goOutOfLoop, size_t column, size_t row, size_t p) {
     flag = true;
-    for (size_t i = 0; i < 9; ++i) {
-        if (i != column) {
-            for (auto j:m_board[row][i]) {
-                if (p == j) {
-                    flag = false;
-                    goto fastexitcolumn;
+    [&](){
+        for (size_t i = 0; i < 9; ++i) {
+            if (i != column) {
+                for (auto j:m_board[row][i]) {
+                    if (p == j) {
+                        flag = false;
+                        return;
+                    }
                 }
             }
         }
-    }
-    fastexitcolumn:
+    }();
     if (flag) {
-        insertElement(flag, row, column, p);
-        goOutOfLoop = true;
+       insertElement(flag, row, column, p);
+       goOutOfLoop = true;
     }
 }
 
 void board_sudoku::onlyOneRow(bool &flag, bool &goOutOfLoop, size_t column, size_t row, size_t p) {
     flag = true;
-    for (size_t i = 0; i < 9; ++i) {
-        if (i != row) {
-            for (auto j:m_board[i][row]) {
-                if (p == j) {
-                    flag = false;
-                    goto fastecolumnitrow;
+    [&](){
+        for (size_t i = 0; i < 9; ++i) {
+            if (i != row) {
+                for (auto j:m_board[i][column]) {
+                    if (p == j) {
+                        flag = false;
+                        return;
+                    }
                 }
             }
         }
-    }
-    fastecolumnitrow:
+    }();
     if (flag) {
-        insertElement(flag, row, column, p);
-        goOutOfLoop = true;
+       insertElement(flag, row, column, p);
+       goOutOfLoop = true;
     }
 }
+
+
 
 void board_sudoku::clearBox(size_t column, size_t row) {
     for (size_t i = (static_cast<size_t>(row / 3)) * 3; i < (static_cast<size_t>(row / 3) + 1) * 3; ++i) {
@@ -126,23 +130,25 @@ void board_sudoku::clearBox(size_t column, size_t row) {
 
 void board_sudoku::onlyOneBox(bool &flag, bool &goOutOfLoop, size_t column, size_t row, size_t p) {
     flag = true;
-    for (size_t i = static_cast<size_t>(row / 3) * 3; i < (static_cast<size_t>(row / 3) + 1) * 3; ++i) {
-        for (size_t j = (static_cast<size_t>(column / 3)) * 3; j < (static_cast<size_t>(column / 3) + 1) * 3; ++j)
-            if (i != row || j != column) {
-                for (auto l:m_board[i][j]) {
-                    if (p == l) {
-                        flag = false;
-                        goto fastexitbox;
+    [&](){
+        for (size_t i = static_cast<size_t>(row / 3) * 3; i < (static_cast<size_t>(row / 3) + 1) * 3; ++i) {
+            for (size_t j = (static_cast<size_t>(column / 3)) * 3; j < (static_cast<size_t>(column / 3) + 1) * 3; ++j)
+                if (i != row || j != column) {
+                    for (auto l:m_board[i][j]) {
+                        if (p == l) {
+                            flag = false;
+                            return;
+                        }
                     }
                 }
-            }
-    }
-    fastexitbox:
+        }
+    }();
     if (flag) {
-        insertElement(flag, row, column, p);
-        goOutOfLoop = true;
+       insertElement(flag, row, column, p);
+       goOutOfLoop = true;
     }
 }
+
 
 void board_sudoku::insertElement(bool &goOutOfLoop, size_t row, size_t column, size_t p) {
     size_t change = p;
@@ -159,17 +165,7 @@ void board_sudoku::solve() {//coordinates same as in the matrix
                 if (m_board[row][column].size() == 1) {
                     clearColumns(column, row);
                     clearRows(column, row);
-//              clearBox(column,row);
-                    [this, column, row]() {
-                        for (size_t i = (static_cast<size_t>(row / 3)) * 3;
-                             i < (static_cast<size_t>(row / 3) + 1) * 3; ++i) {
-                            for (size_t j = (static_cast<size_t>(column / 3)) * 3;
-                                 j < (static_cast<size_t>(column / 3) + 1) * 3; ++j)
-                                if (i != row && j != column) {
-                                    this->m_board[i][j].erase(*(this->m_board[row][column].begin()));
-                                }
-                        }
-                    }();
+                    clearBox(column,row);
                 } else if (m_board[row][column].size() == 0) {
                     delete this;
                     throw (string("Sudoku does not have solution\n"));
