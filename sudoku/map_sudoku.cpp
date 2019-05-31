@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Ł
+
 board_sudoku::board_sudoku(string filename) {
     fstream fileptr;
     fileptr.open(filename, ios::in);
