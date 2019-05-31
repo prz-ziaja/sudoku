@@ -52,17 +52,14 @@ int board_sudoku::counter() {
 }
 
 bool board_sudoku::issolved() {
-    bool k = true;
     for (size_t row = 0; row < 9; ++row) {
         for (size_t column = 0; column < 9; ++column) {
             if (m_board[row][column].size() != 1) {
-                k = false;
-                goto fastexit;
+                return false;
             }
         }
     }
-    fastexit:
-    return k;
+    return true;
 }
 
 void board_sudoku::clearRows(size_t column, size_t row) {
