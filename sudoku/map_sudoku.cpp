@@ -3,7 +3,6 @@
 
 using namespace std;
 
-
 board_sudoku::board_sudoku(string filename) {
     fstream fileptr;
     fileptr.open(filename, ios::in);
@@ -76,6 +75,16 @@ void board_sudoku::clearColumns(size_t column, size_t row) {
     }
 }
 
+void board_sudoku::clearBox(size_t column, size_t row) {
+    for (size_t i = (static_cast<size_t>(row / 3)) * 3; i < (static_cast<size_t>(row / 3) + 1) * 3; ++i) {
+        for (size_t j = (static_cast<size_t>(column / 3)) * 3; j < (static_cast<size_t>(column / 3) + 1) * 3; ++j) {
+            if (i != row && j != column) {
+                this->m_board[i][j].erase(*(this->m_board[row][column].begin()));
+            }
+        }
+    }
+}
+
 void board_sudoku::onlyOneColumn(bool &flag, bool &goOutOfLoop, size_t column, size_t row, size_t p) {
     flag = true;
     [&](){
@@ -113,18 +122,6 @@ void board_sudoku::onlyOneRow(bool &flag, bool &goOutOfLoop, size_t column, size
     if (flag) {
        insertElement(flag, row, column, p);
        goOutOfLoop = true;
-    }
-}
-
-
-
-void board_sudoku::clearBox(size_t column, size_t row) {
-    for (size_t i = (static_cast<size_t>(row / 3)) * 3; i < (static_cast<size_t>(row / 3) + 1) * 3; ++i) {
-        for (size_t j = (static_cast<size_t>(column / 3)) * 3; j < (static_cast<size_t>(column / 3) + 1) * 3; ++j) {
-            if (i != row && j != column) {
-                this->m_board[i][j].erase(*(this->m_board[row][column].begin()));
-            }
-        }
     }
 }
 
