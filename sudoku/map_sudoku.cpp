@@ -35,6 +35,7 @@ board_sudoku::board_sudoku(string filename) {
             }
         }
         m_board.push_back(vline);
+        delete &vline;
     }
     fileptr.close();
 }

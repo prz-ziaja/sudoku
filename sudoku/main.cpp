@@ -25,6 +25,7 @@ int main() {
         }
         //a.send();
     }
+    delete &filelist;
 }
 
 
